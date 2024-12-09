@@ -1,8 +1,53 @@
 version: '3.8'
-services:
-  todolist:
-    build: .   # Indique le répertoire contenant le Dockerfile
-    ports:
-      - "8081:8080"   # Redirige le port 8080 du conteneur vers le port 8081 de la machine hôte
 
+services:
+  # Service pour Traefik (le Load Balancer)
+  traefik:
+    image: traefik:2.5
+    restart: unless-stopped
+    ports:
+      - 80:80        # Port pour les requêtes HTTP
+      - 8080:8080    # Port pour accéder au dashboard de Traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.toml:/traefik.toml
+    labels:
+      - "traefik.enable=true"
+
+  # Service pour ton application Todo-List
+  todolist:
+    image: todo-list  # Change ceci si ton image a un autre nom
+    build:
+      context: .
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: example
+    labels:
+      - "traefik.http.routers.todolist.rule=PathPrefix(`/app`)"
+      - "traefik.http.middlewares.todolist.stripPrefix.prefixes=/app"
+      - "traefik.http.routers.todolist.middlewares=todolist@docker"
+    deploy:
+      replicas: 3  # Nombre d'instances (réplicas) du service
+    
+  # Service pour la base de données PostgreSQL
+  postgres:
+    image: postgres:14.0-alpine
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432:5432"  # Port pour accéder à PostgreSQL
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+    driver: local
 

@@ -50,6 +50,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        
+        <!-- Spring Boot Starter Data JDBC pour travailler avec une base de données -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+        </dependency>
+
+        <!-- Dépendance pour PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <!-- Dépendance pour Java Persistence (javax.persistence) -->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version> <!-- ou une version plus récente si nécessaire -->
+        </dependency>
 
         <!-- AssertJ pour les tests unitaires -->
         <dependency>
@@ -97,3 +116,4 @@
     </build>
 
 </project>
+
