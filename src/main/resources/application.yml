@@ -1,7 +1,8 @@
 spring:
-  sql.init.mode: always
+  sql:
+    init:
+      mode: always # Permet l'exécution automatique de schema.sql au démarrage
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://postgres:5432/postgres # Hostname 'postgres' correspondant au service Docker
     username: postgres
     password: example
-
