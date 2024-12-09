@@ -21,4 +21,3 @@ public class TodoListController {
         todos.add(todo);
     }
 }
-

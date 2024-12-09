@@ -1,8 +1,8 @@
 version: '3.8'
-
 services:
   todolist:
-    build: .  # Utilise le Dockerfile dans le même répertoire
+    build: .   # Indique le répertoire contenant le Dockerfile
     ports:
-      - "8081:8080"  # Redirige le port 8081 de la machine hôte vers le port 8080 du container
+      - "8081:8080"   # Redirige le port 8080 du conteneur vers le port 8081 de la machine hôte
+
 
