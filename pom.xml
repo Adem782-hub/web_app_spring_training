@@ -1,12 +1,14 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.lernejo</groupId>
     <artifactId>maven_training</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,6 +17,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.parameters>true</maven.compiler.parameters>
 
+        <spring.boot.version>3.4.0</spring.boot.version>
         <junit.version>5.10.3</junit.version>
         <assertj.version>3.26.3</assertj.version>
 
@@ -23,7 +26,29 @@
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     </properties>
 
+    <!-- Gestion des dépendances avec le BOM de Spring Boot -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Dépendances du projet -->
     <dependencies>
+        <!-- Spring Boot Starter Web pour créer des applications web RESTful -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!-- La version est gérée par le BOM -->
+        </dependency>
+
+        <!-- Dépendances pour les tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -38,19 +63,31 @@
         </dependency>
     </dependencies>
 
+    <!-- Configuration de la construction du projet -->
     <build>
+        <!-- Gestion des plugins -->
         <pluginManagement>
             <plugins>
+                <!-- Plugin de compilation Maven -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <parameters>${maven.compiler.parameters}</parameters>
+                    </configuration>
                 </plugin>
+
+                <!-- Plugin Surefire pour l'exécution des tests -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                 </plugin>
+
+                <!-- Plugin JaCoCo pour la couverture de code -->
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
@@ -58,7 +95,9 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
         <plugins>
+            <!-- Plugin JaCoCo avec les configurations d'exécution -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -83,6 +122,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Plugin Spring Boot pour créer un jar exécutable -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>fr.lernejo.todo.TodoListApp</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
