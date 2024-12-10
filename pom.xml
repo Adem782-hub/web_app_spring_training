@@ -11,16 +11,21 @@
     <packaging>jar</packaging>
 
     <properties>
+        <!-- Encodage -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Version de Java -->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.parameters>true</maven.compiler.parameters>
 
+        <!-- Versions des dépendances -->
         <spring.boot.version>3.4.0</spring.boot.version>
         <junit.version>5.10.3</junit.version>
         <assertj.version>3.26.3</assertj.version>
 
+        <!-- Versions des plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
@@ -45,6 +50,20 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <!-- La version est gérée par le BOM -->
+        </dependency>
+
+        <!-- Spring Boot Starter Data JDBC pour la persistance des données -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+            <!-- La version est gérée par le BOM -->
+        </dependency>
+
+        <!-- Driver PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <!-- La version est gérée par le BOM -->
         </dependency>
 
@@ -129,6 +148,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
+                <configuration>
+                    <mainClass>fr.lernejo.todo.TodoListApp</mainClass>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -136,9 +158,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <mainClass>fr.lernejo.todo.TodoListApp</mainClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>
