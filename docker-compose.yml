@@ -1,10 +1,12 @@
+version: '3.8'
+
 services:
   traefik:
     image: traefik:2.5
     restart: unless-stopped
     ports:
-      - "80:80"      # Port pour les requêtes HTTP
-      - "8080:8080"  # Port pour le dashboard Traefik
+      - "80:80"     # Traefik HTTP
+      - "8080:8080" # Traefik Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.toml:/traefik.toml
@@ -15,14 +17,30 @@ services:
       - "traefik.http.routers.todolist.rule=PathPrefix(`/app`)"
       - "traefik.http.middlewares.todolist.stripPrefix.prefixes=/app"
       - "traefik.http.routers.todolist.middlewares=todolist@docker"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: example
+    depends_on:
+      - postgres
     deploy:
       replicas: 3
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
 
   postgres:
     image: postgres:14.0-alpine
     container_name: postgres
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+
 
